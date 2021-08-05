@@ -1,0 +1,17 @@
+{
+  "name": "motivher_bot",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "*",
+    "discord": "^0.8.2",
+    "discord.js": "^12.5.1",
+    "node-cron": "^3.0.0",
+    "node-reddit-js": "^0.0.11"
+  },
+  "author": "HelviraG <helvira.dev@gmail.com>",
+  "description": "Boost du serveur Motiv'Her"
+}
