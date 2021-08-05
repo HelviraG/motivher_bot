@@ -407,4 +407,4 @@ function trim(str) {
   return str.split(/\s/).join('')
 }
 
-bot.login('ODI1MDcyNTA3MTg1OTIyMTA5.YF4mpg.F0PMQvADAPPHiXPY9uPYXwAfF5E')
+bot.login('discord_token')
