@@ -180,10 +180,31 @@ const love_msg                    = [
 
 /***************** Cron Tasks ***************************/
 
-// cron.schedule('0 8 * * *', function() {
+cron.schedule('30 18 * * Monday-Friday', function() {  
+  const nice_day_channel            = bot.channels.cache.get('826078818707963914')
+  const random_nice_day             = Math.floor(Math.random() * nice_day_msg.length)
+  nice_day_channel.send(nice_day_msg[random_nice_day][0] + ' <@&824697986289762344> ' + nice_day_msg[random_nice_day][1] + ' <@&821878292763508778>' + nice_day_msg[random_nice_day][2])
+}, {
+  scheduled: true,
+  timezone: "Europe/Paris"
+})
 
-// });
+cron.schedule('30 9 * * Monday-Friday', function() {  
+  const daily_quote_channel           = bot.channels.cache.get('872965561716465684')
+  getRandomDailyQuote(daily_quote_channel)
+}, {
+  scheduled: true,
+  timezone: "Europe/Paris"
+})
 
+// cron.schedule('* * * * Monday-Friday', function() {  
+//   // const daily_quote_channel           = bot.channels.cache.get('872965561716465684')
+//   const daily_quote_channel           = bot.channels.cache.get('825369194597449788')
+//   console.log('Here')
+// }, {
+//   scheduled: true,
+//   timezone: "Europe/Paris"
+// })
 
 /***************** Bot Core *****************************/
 
@@ -200,37 +221,14 @@ bot.on('guildMemberAdd', member => {
   channel_message.send(welcome_msgs[random_header][0] +' <@'+ member.id +'>'+ welcome_msgs[random_header][1])
 })
 
-cron.schedule('30 18 * * *', function() {  
-  //const live_message           = bot.channels.cache.get('826078818707963914')
-
-  //live_message.send('Hello les ' + '<@&824697986289762344> et les <@&821878292763508778> 👋! C\'est jeudi et c\'est l\'heure du Motiv\'CV 😁. Décollage à ***18h30*** sur le channel ***Le Live du Jedi*** 🚀')
-  const nice_day_channel            = bot.channels.cache.get('826078818707963914')
-  const random_nice_day             = Math.floor(Math.random() * nice_day_msg.length)
-  nice_day_channel.send(nice_day_msg[random_nice_day][0] + ' <@&824697986289762344> ' + nice_day_msg[random_nice_day][1] + ' <@&821878292763508778>' + nice_day_msg[random_nice_day][2])
-}, {
-  scheduled: true,
-  timezone: "Europe/Paris"
-})
-
-// cron.schedule('10 20 * * *', function() {  
-//   const special_message           = bot.channels.cache.get('826078818707963914')
-
-//   special_message.send('Alors c\'était comment ce live les <@&824697986289762344> et les <@&821878292763508778> 😁?')
-
-//   // const nice_day_channel            = bot.channels.cache.get('826078818707963914')
-//   // const random_nice_day             = Math.floor(Math.random() * nice_day_msg.length)
-//   // nice_day_channel.send(nice_day_msg[random_nice_day][0] + ' <@&824697986289762344> ' + nice_day_msg[random_nice_day][1] + ' <@&821878292763508778>' + nice_day_msg[random_nice_day][2])
-// }, {
-//   scheduled: true,
-//   timezone: "Europe/Paris"
-// })
-
 bot.on('message', message => {
   if (trim(message.content.toUpperCase()) === 'PING') {
     message.channel.send('<@'+ message.author.id +'> pong !')
   } else if (trim(message.content.toUpperCase()) === 'TIC') {
     message.channel.send('<@'+ message.author.id +'> tac !')
-  } else if (message.mentions.members.size > 0) { 
+  } 
+  
+  if (message.mentions.members.size > 0) { 
     // In case forgotten welcome message
     if (message.content.toUpperCase().includes('ADA TU AS OUBLIÉ ')) {
       const channel_message           = bot.channels.cache.get('821876233817948175')
@@ -246,61 +244,63 @@ bot.on('message', message => {
       message.react('😅')
       message.channel.send(apologize_msgs[random_apologize] + ' <@'+ message.author.id +'>. ' + new_mentor_msg[random_new_mentor][0] +' <@'+ message.mentions.members.first().user.id +'> '+ new_mentor_msg[random_new_mentor][1])
     }
-  } else if ((message.content.toUpperCase().includes('ADA JE SUIS OÙ')) || (message.content.toUpperCase().includes('ADA C\'EST QUOI MOTIV\'HER')) || (message.content.toUpperCase().includes('ADA C\'EST QUOI MOTIVHER'))) {
-    const random_prez                 = Math.floor(Math.random() * prez_msgs.length)
+  }
+  
+  if ((message.mentions.members.size > 0) && (message.mentions.members.first().user.id == '825072507185922109')) { 
+    if ((message.content.toUpperCase().includes('JE SUIS OÙ')) || (message.content.toUpperCase().includes('C\'EST QUOI MOTIV\'HER'))) {
+      const random_prez                 = Math.floor(Math.random() * prez_msgs.length)
 
-    message.react('💡')
-    message.react('❓')
-    message.channel.send(prez_msgs[random_prez])
-  } else if ((message.content.toUpperCase().includes('HELLO ADA')) || (message.content.toUpperCase().includes('COUCOU ADA')) || (message.content.toUpperCase().includes('SALUT ADA')) || (message.content.toUpperCase().includes('BONJOUR ADA'))) {
-    const random_hello                = Math.floor(Math.random() * ada_msgs_hello.length)
+      message.react('💡')
+      message.react('❓')
+      message.channel.send(prez_msgs[random_prez])
+    } else if ((message.content.toUpperCase().includes('HELLO')) || (message.content.toUpperCase().includes('COUCOU')) || (message.content.toUpperCase().includes('SALUT')) || (message.content.toUpperCase().includes('BONJOUR'))) {
+      const random_hello                = Math.floor(Math.random() * ada_msgs_hello.length)
 
-    message.react('👋')
-    message.channel.send(ada_msgs_hello[random_hello][0] +' <@'+ message.author.id +'>'+ ada_msgs_hello[random_hello][1])
-  } else if ((message.content.toUpperCase().includes('ADA COMMENT ÇA VA')) || (message.content.toUpperCase().includes('ADA CA VA')) || (message.content.toUpperCase().includes('ADA COMMENT CA VA')) || (message.content.toUpperCase().includes('ADA ÇA VA'))) {
-    const random_ok                   = Math.floor(Math.random() * ada_ok.length)
+      message.react('👋')
+      message.channel.send(ada_msgs_hello[random_hello][0] +' <@'+ message.author.id +'>'+ ada_msgs_hello[random_hello][1])
+    } else if ((message.content.toUpperCase().includes('COMMENT ÇA VA')) || (message.content.toUpperCase().includes('CA VA')) || (message.content.toUpperCase().includes('COMMENT CA VA')) || (message.content.toUpperCase().includes('ÇA VA'))) {
+      const random_ok                   = Math.floor(Math.random() * ada_ok.length)
 
-    message.channel.send(ada_ok[random_ok][0] +' <@'+ message.author.id +'> '+ ada_ok[random_ok][1])
-  } else if ((message.content.toUpperCase().includes('ADA ES-TU LÀ')) || (message.content.toUpperCase().includes('ADA ES TU LÀ')) || (message.content.toUpperCase().includes('ADA TU ES LÀ')) || (message.content.toUpperCase().includes('ADA T\'ES LÀ'))) {
-    const random_here                 = Math.floor(Math.random() * ada_msgs_here.length)
+      message.channel.send(ada_ok[random_ok][0] +' <@'+ message.author.id +'> '+ ada_ok[random_ok][1])
+    } else if ((message.content.toUpperCase().includes('ES-TU LÀ')) || (message.content.toUpperCase().includes('ES TU LÀ')) || (message.content.toUpperCase().includes('TU ES LÀ')) || (message.content.toUpperCase().includes('T\'ES LÀ'))) {
+      const random_here                 = Math.floor(Math.random() * ada_msgs_here.length)
 
-    message.channel.send(ada_msgs_here[random_here][0] +' <@'+ message.author.id +'>'+ ada_msgs_here[random_here][1])
-  } else if ((message.content.toUpperCase().includes('ADA OÙ ES-TU')) || (message.content.toUpperCase().includes('ADA OÙ ES TU')) || (message.content.toUpperCase().includes('ADA OU ES TU')) || (message.content.toUpperCase().includes('ADA TU ES OÙ')) || (message.content.toUpperCase().includes('ADA T\'ES OÙ'))) {
-    const random_where                = Math.floor(Math.random() * ada_msgs_where.length)
+      message.channel.send(ada_msgs_here[random_here][0] +' <@'+ message.author.id +'>'+ ada_msgs_here[random_here][1])
+    } else if ((message.content.toUpperCase().includes('OÙ ES-TU')) || (message.content.toUpperCase().includes('OU ES TU')) || (message.content.toUpperCase().includes('TU ES OÙ')) || (message.content.toUpperCase().includes('T\'ES OÙ'))) {
+      const random_where                = Math.floor(Math.random() * ada_msgs_where.length)
 
-    message.react('🙌')
-    message.react('👁️')
-    message.channel.send(ada_msgs_where[random_where][0] +' <@'+ message.author.id +'>'+ ada_msgs_where[random_where][1])
-  } else if ((message.content.toUpperCase().includes('ADA TU PEUX REPASSER PLUS TARD'))) {
-    const random_where                = Math.floor(Math.random() * ada_msgs_where.length)
+      message.react('🙌')
+      message.react('👁️')
+      message.channel.send(ada_msgs_where[random_where][0] +' <@'+ message.author.id +'>'+ ada_msgs_where[random_where][1])
+    } else if ((message.content.toUpperCase().includes('TU PEUX REPASSER PLUS TARD'))) {
+      message.react('😥')
+      message.channel.send('C\'est juste que vous commencez à me manquer les ' + '<@&824697986289762344> et les <@&821878292763508778> ! Je me sens seule 😥')
+    } else if (message.content.toUpperCase().includes('JE T\'AIME')) {
+      const random_love                 = Math.floor(Math.random() * love_msg.length)
 
-    message.react('😥')
-    message.channel.send('C\'est juste que vous commencez à me manquer les ' + '<@&824697986289762344> et les <@&821878292763508778> ! Je me sens seule 😥')
-  } else if (message.content.toUpperCase().includes('ADA JE T\'AIME')) {
-    const random_love                 = Math.floor(Math.random() * love_msg.length)
-
-    message.react('😍')
-    message.react('💖')
-    message.channel.send(love_msg[random_love][0] +' <@'+ message.author.id +'>'+ love_msg[random_love][1])
-  } else if ((message.content.toUpperCase().includes('ADA PLS')) || (message.content.toUpperCase().includes('ADA MEME MOI')) || ((message.content.toUpperCase().includes('ADA HELP')))) {
-    message.react('⛑️')
-    loadRandomMemes(message)
-  } else if ((message.content.toUpperCase().includes('ADA CHUCK')) || (message.content.toUpperCase().includes('CHUCK'))) {
-    message.react('🦾')
-    getRandomChuckJokes(message)
-  } else if (message.content.toUpperCase().includes('ADA TECH')) {
-    message.react('🔍')
-    message.react('🗞')
-    if (message.content.includes('#')) {
-      var str                       = message.content
-      var tag                       = str.split('#').pop()
-      getRandomDevToArticleByTags(message, tag)
-    } else {
-      getRandomDevToArticle(message)
-    }
-  } else if (message.content.toUpperCase().includes('TEST START READY YES')) {
-    message.channel.send('Prête à me mettre au travail <@'+ message.author.id +'> 💪!')
-  } 
+      message.react('😍')
+      message.react('💖')
+      message.channel.send(love_msg[random_love][0] +' <@'+ message.author.id +'>'+ love_msg[random_love][1])
+    } else if ((message.content.toUpperCase().includes('PLS')) || (message.content.toUpperCase().includes('MEME MOI')) || ((message.content.toUpperCase().includes('HELP')))) {
+      message.react('⛑️')
+      loadRandomMemes(message)
+    } else if ((message.content.toUpperCase().includes('CHUCK')) || (message.content.toUpperCase().includes('CHUCK'))) {
+      message.react('🦾')
+      getRandomChuckJokes(message)
+    } else if (message.content.toUpperCase().includes('TECH')) {
+      message.react('🔍')
+      message.react('🗞')
+      if (message.content.includes('#')) {
+        var str                       = message.content
+        var tag                       = str.split('#').pop()
+        getRandomDevToArticleByTags(message, tag)
+      } else {
+        getRandomDevToArticle(message)
+      }
+    } else if (message.content.toUpperCase().includes('TEST START READY YES')) {
+      message.channel.send('Prête à me mettre au travail <@'+ message.author.id +'> 💪!')
+    } 
+  }
 })
 
 /***************** Bot Actions *************************/
@@ -315,6 +315,7 @@ function loadRandomMemes(message) {
       const random_meme               = Math.floor(Math.random() * meme_msgs.length)
 
       const embed                     = new Discord.MessageEmbed()
+        .setColor('#ffa502')
         .setDescription('**'+meme_msgs[random_meme][0] +'<@'+ message.author.id +'>'+ meme_msgs[random_meme][1]+'**')
         .setImage(response[0].data['children'][0].data.url)
       message.channel.send(embed)
@@ -334,6 +335,7 @@ function getRandomChuckJokes(message) {
       const random_meme               = Math.floor(Math.random() * meme_msgs.length)
 
       const embed                     = new Discord.MessageEmbed()
+        .setColor('#ffa502')
         .setAuthor('Chuck Norris contrôle Ada 💣', '', '')
         .setThumbnail('https://api.chucknorris.io/img/chucknorris_logo_coloured_small@2x.png')
         .setDescription('***'+jsUcfirst(response.value)+'***')
@@ -356,6 +358,7 @@ function getRandomDevToArticle(message) {
       var date_to_display                 = new Date(response[random_article].published_at)
 
       const embed                     = new Discord.MessageEmbed()
+        .setColor('#ffa502')
         .setTitle(response[random_article].title)
         .setDescription('*Dev.to #general pour <@'+ message.author.id +'> 📰*')
         .addFields(
@@ -379,10 +382,11 @@ function getRandomDevToArticleByTags(message, tag) {
   fetch(url, settings)
     .then(response => response.json())
     .then(response => {
-      let random_article                  = Math.floor(Math.random() * response.length)
-      var date_to_display                 = new Date(response[random_article].published_at)
+      let random_article              = Math.floor(Math.random() * response.length)
+      var date_to_display             = new Date(response[random_article].published_at)
 
       const embed                     = new Discord.MessageEmbed()
+        .setColor('#ffa502')
         .setTitle(response[random_article].title)
         .setDescription('*Dev.to #'+tag+' pour <@'+ message.author.id +'> 📰*')
         .addFields(
@@ -392,6 +396,28 @@ function getRandomDevToArticleByTags(message, tag) {
         .setThumbnail('https://d2fltix0v2e0sb.cloudfront.net/dev-black.png')
         .setFooter('Écrit par : ' + response[random_article].user.name + ' | ' + date_to_display.toLocaleDateString('fr-FR'), response[random_article].user.profile_image)
       message.channel.send(embed)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+}
+
+function getRandomDailyQuote(daily_quote_channel) {
+  let url                             = "https://quotable.io/quotes?tags=technology|happiness|life|inspirational|future|wisdom|famous-quotes&limit=5"
+  let settings                        = { method: "Get" }
+
+  fetch(url, settings)
+    .then(response => response.json())
+    .then(response => {
+      let random_quote                = Math.floor(Math.random() * response.count)
+      let channel                     = daily_quote_channel
+
+      const embed                     = new Discord.MessageEmbed()
+        .setColor('#ff6b81')
+        .setTitle('***'+ response.results[random_quote].content + '***')
+        .setAuthor('Citation du jour', 'https://media-exp1.licdn.com/dms/image/C4D0BAQE3S6iWF4CLXg/company-logo_100_100/0/1616968606006?e=1635984000&v=beta&t=BTi4CWCtwotZzatJngebrNccHQ2xFyjht6vTUTe3rKI')
+        .setDescription('--' + response.results[random_quote].author + '')
+      channel.send(embed)
     })
     .catch((err) => {
       console.error(err)
